@@ -1,0 +1,66 @@
+ <html>
+  <head>
+    <!--Ceci est un commentaire qui ne sera pas affiché à l'exécution du code-->
+    <!--La structure du code HTML débute par une section head, avant une section body-->
+    <!--On ajoute dans cette section head les métadonnées, on charge les bibliothèques de fonctions externes nécessaires, et entre les balises style, on intègre le code CSS-->
+      <meta charset="utf-8">
+      
+      <title>Ma page web</title>
+       
+       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" >
+       
+       <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"> </script> <!--Ces balises script permettent par exemple de charger des bibliothèques de fonctions externes, à laisser vide pour l'instant-->
+       <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> 
+       
+    
+      <style>
+      #mapid {height: 100% ; width: 100%;} 
+    
+      </style> <!--Ces balises style permettent d'insérer du code CSS gérant l'apparence des objets générés dans la section body. Peut être basculé dans un fichier externe appelé ici ou directement entre ces balises-->
+  </head>
+  
+  <body>
+      
+        <div id="mapid"></div>
+      
+       <center>
+           <button id="boutongares">Afficher ou cacher les gares</button>
+           <button id="boutonortho">Afficher ou cacher l'orthophoto</button>
+      </center> 
+       
+    <!--Deuxième section du code HTML, où on va lister les éléments à générer, par exemple un paragraphe de texte entre des balises p-->
+      <script> 
+      var mymap = L.map('mapid', {center: [48.5695, 7.5702], zoom: 10});
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(mymap);
+          var garestrasbourg = L.marker([48.5851, 7.7342]).bindPopup('Gare SNCF de Strasbourg') ;
+          var gareselestat = L.marker([48.2600, 7.4428]).bindPopup('Gare SNCF de Sélestat');
+          var garebenfeld = L.marker([48.3737, 7.5838]).bindPopup('Gare SNCF de Benfeld') ;
+          var garesaverne = L.marker([48.7448, 7.3621]).bindPopup('Gare SNCF de Saverne') ;
+          var gareerstein = L.marker([48.4227, 7.6381]).bindPopup('Gare SNCF de Erstein') ;
+          var gares = L.layerGroup([garestrasbourg, garesaverne, gareselestat, garebenfeld, gareerstein]).addTo(mymap); 
+          var ortho = L.tileLayer.wms('https://www.datagrandest.fr/geoserver/ems/ows', {layers: 'EMS_Ortho_2022',format: 'image/png', transparent:true}).addTo(mymap); 
+          
+         $("#boutongares").click(function(event) {
+  event.preventDefault();
+  if(mymap.hasLayer(gares)) {
+    $(this).removeClass('selected');
+    mymap.removeLayer(gares);
+  } else {
+    mymap.addLayer(gares);
+    $(this).addClass('selected');
+  }
+});
+
+$("#boutonortho").click(function(event) {
+  event.preventDefault();
+  if(mymap.hasLayer(ortho)) {
+    $(this).removeClass('selected');
+    mymap.removeLayer(ortho);
+  } else {
+    mymap.addLayer(ortho);
+    $(this).addClass('selected');
+  }
+}); 
+      </script>
+  </body>
+</html> 
